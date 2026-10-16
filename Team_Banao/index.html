@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Making Software</title>
+<style>
+body{background:#0f172a;color:#fff;font-family:system-ui;padding:12px;max-width:500px;margin:auto}
+.card{background:#1e293b;padding:14px;border-radius:12px;margin:10px 0}
+input,button{width:100%;padding:12px;border-radius:8px;border:none;margin:5px 0;font-size:16px}
+button{background:#22c55e;font-weight:bold;cursor:pointer}
+.team{border:1px dashed #475569;padding:10px;border-radius:8px;margin:8px 0}
+.top{display:flex;justify-content:space-between;align-items:center}
+.lang{width:auto;background:#334155;color:#fff;padding:6px 14px}
+.ad{border:1px solid #334155;padding:8px;text-align:center;font-size:12px;opacity:.6;margin-top:15px}
+</style>
+</head>
+<body>
+<div class="top">
+<h3 id="mainTitle">Welcome To My Team Making Software</h3>
+<button class="lang" onclick="toggleLang()" id="langBtn">हिंदी</button>
+</div>
+<p id="desc" style="font-size:13px;opacity:.8"></p>
+
+<div class="card">
+<input id="nameInput" type="text" placeholder="Sabhi Ladko ka Name Likhe Space Deker">
+<button onclick="addFromInput()" id="addBtn">Add Karo</button>
+<div id="playerList" style="font-size:13px;margin-top:6px"></div>
+</div>
+
+<div class="card">
+<button onclick="makeTeams()" id="makeBtn">Team Banao 🎲 [Y]</button>
+</div>
+
+<div id="result"></div>
+
+<div class="card" id="shareBox" style="display:none">
+<button onclick="shareTeam()" style="background:#25D366" id="shareTeamBtn">Team WhatsApp Pe Bhejo</button>
+<button onclick="shareWebsite()" style="background:#3b82f6;margin-top:8px" id="shareWebBtn">Website Share Karo</button>
+</div>
+
+<div class="ad">
+AD YAHAN LAGEGA - Monetag / AdSense Code
+<!-- PASTE AD CODE HERE -->
+</div>
+<script>
+let dict={
+en:{
+ title:"----------Welcome To My Team Making Software----------",
+ desc:"Aap logo ki bhi ye Pareshani rhi hogi khelte waqt jab Team Banate hai Jhagda hota hai ki ye Meri side hoga wo Meri side... Bas Ap Sabhi Ladko Ka Name Likho or Team ka Bantwara Ye Khud kar Dega.",
+ add:"Add Karo", make:"Fir se Team banana hai? [y] - Team Banao 🎲",
+ shareT:"Team WhatsApp Pe Bhejo", shareW:"Website Share Karo", ph:"Sabhi Ladko ka Name Likhe Space Deker"
+},
+hi:{
+ title:"----------मेरी टीम बनाने वाले सॉफ्टवेयर में आपका स्वागत है----------",
+ desc:"आप लोगों को भी खेलते वक्त टीम बनाते झगड़ा होता होगा की ये मेरी साइड होगा वो मेरी साइड... बस सभी लड़कों का नाम लिखो और बंटवारा ये खुद कर देगा।",
+ add:"जोड़ो", make:"फिर से टीम बनानी है? [y] - टीम बनाओ 🎲",
+ shareT:"टीम व्हाट्सएप पर भेजो", shareW:"वेबसाइट शेयर करो", ph:"सभी लड़कों के नाम Space देकर लिखो"
+}
+};
+
+let players = [];
+let lang = localStorage.getItem('app_lang') || 'en';
+
+// 10 DIN TAK SAVE - Offline Logic
+let saved = localStorage.getItem('team_data');
+if(saved){
+ let obj = JSON.parse(saved);
+ let now = Date.now();
+ let tenDays = 10*24*60*60*1000;
+ if(now - obj.time < tenDays){
+   players = obj.players;
+ } else {
+   localStorage.removeItem('team_data');
+ }
+}
+
+function save10Days(){
+ localStorage.setItem('team_data', JSON.stringify({players:players, time:Date.now()}));
+ document.getElementById('playerList').innerText = players.join(', ');
+ document.getElementById('shareBox').style.display = players.length>1?'block':'none';
+}
+
+function renderLang(){
+ let d = dict[lang];
+ document.getElementById('mainTitle').innerText = d.title;
+ document.getElementById('desc').innerText = d.desc;
+ document.getElementById('addBtn').innerText = d.add;
+ document.getElementById('makeBtn').innerText = d.make;
+ document.getElementById('shareTeamBtn').innerText = d.shareT;
+ document.getElementById('shareWebBtn').innerText = d.shareW;
+ document.getElementById('nameInput').placeholder = d.ph;
+ document.getElementById('langBtn').innerText = lang==='en'?'हिंदी':'EN';
+}
+function toggleLang(){
+ lang = lang==='en'?'hi':'en';
+ localStorage.setItem('app_lang', lang);
+ renderLang();
+}
+
+// TERA MAIN CODE YAHI HAI
+function addFromInput(){
+ let v = document.getElementById('nameInput').value.trim();
+ if(!v) return;
+ let p = v.split(/\s+/); // Space Deker -.split()
+ players.push(...p);
+ document.getElementById('nameInput').value='';
+ save10Days();
+}
+function makeTeams(){
+ if(players.length<2){alert('Kam se kam 2 naam');return;}
+ let p = [...players];
+ p.sort(()=>Math.random()-0.5); // random.shuffle(p)
+ let t = Math.floor(p.length/2); // t = len(p)//2
+ let team1 = p.slice(0,t); // p[:t]
+ let team2 = p.slice(t); // p[t:]
+
+ document.getElementById('result').innerHTML =
+  `<div class='team'><b>Team_1 = </b> ${team1.join(', ')}</div>
+   <div class='team'><b>Team_2 = </b> ${team2.join(', ')}</div>`;
+ window.lastTeam = `Team_1 = ${team1.join(', ')}%0ATeam_2 = ${team2.join(', ')}`;
+ document.getElementById('shareBox').style.display='block';
+}
+function shareTeam(){
+ window.open('https://wa.me/?text=🏏 '+window.lastTeam+'%0A%0AVia Team Making Software');
+}
+function shareWebsite(){
+ let url = window.location.href;
+ if(navigator.share){
+  navigator.share({title:'Team Banao', text:'Team Banao Website', url:url});
+ } else {
+  window.open('https://wa.me/?text='+encodeURIComponent(url));
+ }
+}
+
+renderLang();
+save10Days();
+</script>
+</body>
+</html>
