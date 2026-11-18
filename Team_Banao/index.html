@@ -1,229 +1,250 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta name="monetag" content="1b626ab8eeca7ab2809160fa25c610b0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1220">
+<title>Team Banao - Random Team Maker</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;padding:18px 14px 30px;
+ background:radial-gradient(circle at top,#172743,#0b1220 55%);
+ color:#f8fafc;font-family:system-ui,sans-serif;min-height:100vh
+}
+.container{max-width:560px;margin:auto}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#22c55e,#0ea5e9);display:grid;place-items:center;font-size:23px}
+h1{font-size:22px;margin:0}
+.tagline{font-size:12px;color:#a9b8cc}
+.lang{background:#1d2a40;color:white;border:1px solid #2b3a52;padding:9px 12px;border-radius:11px}
+.card{background:#151f31;border:1px solid #2b3a52;border-radius:18px;padding:16px;margin:12px 0}
+h2{font-size:17px;margin:0 0 10px}
+.desc{font-size:13px;line-height:1.55;color:#a9b8cc}
+label{display:block;font-size:13px;margin:12px 0 7px;color:#dbeafe}
+textarea,input,select{width:100%;background:#0e1829;border:1px solid #34445e;color:white;border-radius:12px;padding:13px;font:inherit;outline:none}
+textarea{min-height:90px;resize:vertical}
+button{font:inherit;cursor:pointer}
+.btn{width:100%;border:0;border-radius:12px;padding:13px;font-weight:750;margin-top:10px}
+.primary{background:#22c55e;color:#06210f}
+.secondary{background:#3b82f6;color:white}
+.soft{background:#26364e;color:white;border:1px solid #34445e}
+.danger{background:#991b1b;color:white}
+.count,.hint{font-size:12px;color:#a9b8cc;margin-top:9px}
+.player-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.player{display:flex;align-items:center;gap:8px;background:#26364e;border:1px solid #3b4d68;border-radius:30px;padding:6px 8px 6px 12px;font-size:13px}
+.remove{border:0;border-radius:50%;background:#b91c1c;color:white;width:22px;height:22px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.team{background:#0e192a;border:1px solid #31435d;border-radius:14px;padding:13px;margin:10px 0}
+.team-head{display:flex;justify-content:space-between;align-items:center}
+.team h3{color:#4ade80;font-size:16px}
+.team-count{font-size:11px;color:#a9b8cc}
+.captain{color:#fde68a;font-size:13px}
+.members{display:flex;flex-wrap:wrap;gap:7px}
+.member{background:#26364e;padding:7px 10px;border-radius:9px;font-size:13px}
+.member.cap{border:1px solid #d6a83c;color:#fde68a}
+.result[hidden],#customWrap[hidden]{display:none}
+.result-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ad-slot{margin:14px 0;text-align:center;font-size:11px;color:#718096;border:1px dashed #34445e;padding:13px;border-radius:12px}
+footer{text-align:center;color:#718096;font-size:11px;margin-top:18px}
 </style>
 </head>
+
 <body>
 <main class="container">
 
 <header>
-  <div>
-    <h1>🎲 <span data-i18n="title">Team Banao</span></h1>
-    <div class="subtitle" data-i18n="tagline">Fair teams. No arguments. Just play!</div>
-  </div>
-  <button class="lang" id="langBtn">English</button>
+<div class="brand">
+<div class="logo">🎲</div>
+<div>
+<h1 data-i18n="title">Team Banao</h1>
+<div class="tagline">Fair teams. No arguments. Just play!</div>
+</div>
+</div>
+<button class="lang" id="langBtn">English</button>
 </header>
 
 <section class="card">
-  <p class="intro" data-i18n="intro">
-    Sabhi players ke naam add karo. Team Banao unhe randomly teams mein baant dega!
-  </p>
-</section>
+<h2 data-i18n="welcome">Apni team aasani se banao</h2>
+<p class="desc" data-i18n="desc">
+Sabhi players ke naam add karo. Team Banao unhe random aur balanced teams mein baant dega.
+</p>
 
-<section class="card">
-  <label for="nameInput" data-i18n="playersLabel">Players ke naam</label>
-  <textarea id="nameInput"
-    placeholder="Har naam ke baad comma ya new line lagao"
-    data-placeholder-hi="Har naam ke baad comma ya new line lagao&#10;Example: Rahul, Aman, Rohit"
-    data-placeholder-en="Separate names with commas or new lines&#10;Example: Rahul, Aman, Rohit"></textarea>
+<label data-i18n="names">Players ke naam</label>
+<textarea id="nameInput" placeholder="Naam comma ya new line se alag likho"></textarea>
 
-  <div class="hint" data-i18n="inputHint">
-    Ek saath kai naam add kar sakte ho. Duplicate naam automatically skip honge.
-  </div>
-
-  <button class="btn primary" id="addBtn" data-i18n="add">+ Players Add Karo</button>
-
-  <div class="count" id="count">Total Players: 0</div>
-  <div class="player-list" id="playerList"></div>
-
-  <button class="btn danger" id="clearBtn" data-i18n="clear">
-    Sabhi naam delete karo
-  </button>
-</section>
-
-<section class="card">
-  <div class="row">
-    <div>
-      <label for="teamCount" data-i18n="teamCountLabel">Kitni teams?</label>
-      <select id="teamCount">
-        <option value="2">2 Teams</option>
-        <option value="3">3 Teams</option>
-        <option value="4">4 Teams</option>
-        <option value="5">5 Teams</option>
-        <option value="6">6 Teams</option>
-        <option value="custom" data-i18n="custom">Custom</option>
-      </select>
-    </div>
-
-    <div id="customWrap" hidden>
-      <label for="customCount" data-i18n="customLabel">Team number</label>
-      <input id="customCount" type="number" min="2" max="20" value="7">
-    </div>
-  </div>
-
-  <div class="hint" data-i18n="balanceHint">
-    Players ko teams mein jitna ho sake barabar baanta jayega.
-  </div>
-
-  <button class="btn primary" id="makeBtn" data-i18n="make">
-    🎲 Team Banao
-  </button>
-</section>
-
-<section class="card" id="resultCard" hidden>
-  <div class="result-head">
-    <h2 data-i18n="resultTitle">🔥 Teams ready!</h2>
-    <button class="small-btn" id="againBtn" data-i18n="again">
-      ↻ Dobara shuffle
-    </button>
-  </div>
-
-  <div id="teamsOutput"></div>
-
-  <div class="actions">
-    <button class="btn secondary" id="copyBtn" data-i18n="copy">Result Copy Karo</button>
-    <button class="btn secondary" id="whatsBtn" data-i18n="whatsapp">WhatsApp</button>
-    <button class="btn soft" id="imageBtn" data-i18n="download">Image Download</button>
-    <button class="btn soft" id="shareBtn" data-i18n="share">Website Share</button>
-  </div>
-</section>
-
-<div class="footer" data-i18n="footer">
-  Team Banao • Free team maker • Khelo aur enjoy karo!
+<div class="hint" data-i18n="nameHint">
+Example: Rahul, Aman, Rohit (space wale naam bhi likh sakte ho)
 </div>
 
+<button class="btn primary" id="addBtn">＋ <span data-i18n="add">Players Add Karo</span></button>
+
+<div class="count" id="count">Total Players: 0</div>
+<div class="player-list" id="playerList"></div>
+
+<button class="btn danger" id="clearBtn" data-i18n="clear">
+🗑️ Saare Naam Delete Karo
+</button>
+</section>
+
+<section class="card">
+<h2 data-i18n="settings">Team Settings</h2>
+
+<div class="row">
+<div>
+<label data-i18n="teamCount">Kitni teams?</label>
+<select id="teamCount">
+<option value="2">2 Teams</option>
+<option value="3">3 Teams</option>
+<option value="4">4 Teams</option>
+<option value="5">5 Teams</option>
+<option value="6">6 Teams</option>
+<option value="custom">Custom</option>
+</select>
+</div>
+
+<div id="customWrap" hidden>
+<label>Custom teams</label>
+<input id="customCount" type="number" min="2" max="20" value="7">
+</div>
+</div>
+
+<button class="btn primary" id="makeBtn">🎲 <span data-i18n="make">Team Banao</span></button>
+
+<div class="hint" data-i18n="balance">
+Har team mein players ka difference maximum 1 rahega.
+</div>
+</section>
+
+<section class="card result" id="resultCard" hidden>
+<div class="team-head">
+<h2 data-i18n="ready">🎉 Teams Ready!</h2>
+<span class="team-count" id="resultCount"></span>
+</div>
+
+<div id="teamsOutput"></div>
+
+<button class="btn primary" id="againBtn">🔀 Shuffle Again</button>
+
+<div class="result-actions">
+<button class="btn soft" id="copyBtn">📋 Copy Result</button>
+<button class="btn secondary" id="whatsBtn">WhatsApp</button>
+<button class="btn soft" id="imageBtn">🖼️ Download Image</button>
+<button class="btn soft" id="shareBtn">↗ Share Website</button>
+</div>
+</section>
+
+<div class="ad-slot">
+AD SPACE — Monetag / AdSense code yahan add karein
+</div>
+
+<footer>Team Banao • Random teams for everyone</footer>
 </main>
 
 <script>
-(() => {
-const $ = id => document.getElementById(id);
+"use strict";
 
-const translations = {
+const $=id=>document.getElementById(id);
+const KEY="team_banao_players_v2";
+
+let players=[];
+let latestTeams=[];
+let lang="hi";
+
+const words={
 hi:{
 title:"Team Banao",
-tagline:"Fair teams. No arguments. Just play!",
-intro:"Sabhi players ke naam add karo. Team Banao unhe randomly teams mein baant dega, taaki team banane ko lekar jhagda na ho!",
-playersLabel:"Players ke naam",
-inputHint:"Ek saath kai naam add kar sakte ho. Duplicate naam automatically skip honge.",
-add:"+ Players Add Karo",
-clear:"Sabhi naam delete karo",
-teamCountLabel:"Kitni teams?",
-custom:"Custom",
-customLabel:"Teams ki sankhya",
-balanceHint:"Players ko teams mein jitna ho sake barabar baanta jayega.",
-make:"🎲 Team Banao",
-resultTitle:"🔥 Teams ready!",
-again:"↻ Dobara shuffle",
-copy:"Result Copy Karo",
-whatsapp:"WhatsApp",
-download:"Image Download",
-share:"Website Share",
-footer:"Team Banao • Free team maker • Khelo aur enjoy karo!",
-empty:"Abhi koi player add nahi hua.",
+welcome:"Apni team aasani se banao",
+desc:"Sabhi players ke naam add karo. Team Banao unhe random aur balanced teams mein baant dega.",
+names:"Players ke naam",
+nameHint:"Example: Rahul, Aman, Rohit (space wale naam bhi likh sakte ho)",
+add:"Players Add Karo",
+clear:"🗑️ Saare Naam Delete Karo",
+settings:"Team Settings",
+teamCount:"Kitni teams?",
+make:"Team Banao",
+balance:"Har team mein players ka difference maximum 1 rahega.",
+ready:"🎉 Teams Ready!",
 total:"Total Players",
-needNames:"Pehle players ke naam add karo.",
-needMore:"Kam se kam 2 players hone chahiye.",
-tooMany:"Teams ki sankhya 2 se 20 ke beech rakho.",
-cleared:"Saare naam delete kar dein?",
-copied:"Team result copy ho gaya!",
-copyFail:"Copy nahi ho paya. Browser permission check karo.",
+empty:"Abhi koi player add nahi hua.",
+enter:"Pehle players ke naam likho.",
+few:"Kam se kam 2 players add karo.",
+bad:"Teams ki sankhya 2 se 20 ke beech rakho.",
+many:"Har team mein kam se kam ek player hona chahiye.",
+confirm:"Kya saare players delete karne hain?",
+copied:"Result copy ho gaya!",
 captain:"Captain",
-team:"Team",
-noResult:"Pehle teams banao.",
-imageSaved:"Team image download ho gayi."
+team:"Team"
 },
 en:{
 title:"Team Banao",
-tagline:"Fair teams. No arguments. Just play!",
-intro:"Add all player names. Team Banao will randomly split them into teams so nobody has to argue about team selection!",
-playersLabel:"Player names",
-inputHint:"Add multiple names at once. Duplicate names are automatically skipped.",
-add:"+ Add Players",
-clear:"Delete all players",
-teamCountLabel:"Number of teams?",
-custom:"Custom",
-customLabel:"Number of teams",
-balanceHint:"Players are distributed as evenly as possible.",
-make:"🎲 Make Teams",
-resultTitle:"🔥 Teams are ready!",
-again:"↻ Shuffle again",
-copy:"Copy Result",
-whatsapp:"WhatsApp",
-download:"Download Image",
-share:"Share Website",
-footer:"Team Banao • Free team maker • Have fun!",
-empty:"No players added yet.",
+welcome:"Make your teams easily",
+desc:"Add all player names. Team Banao will split them into random, balanced teams.",
+names:"Player names",
+nameHint:"Example: Rahul, Aman, Rohit (names can contain spaces)",
+add:"Add Players",
+clear:"Delete All Names",
+settings:"Team Settings",
+teamCount:"Number of teams?",
+make:"Make Teams",
+balance:"Teams will be balanced, with a maximum difference of one player.",
+ready:"🎉 Teams Ready!",
 total:"Total Players",
-needNames:"Add player names first.",
-needMore:"At least 2 players are required.",
-tooMany:"Choose between 2 and 20 teams.",
-cleared:"Delete all player names?",
-copied:"Team result copied!",
-copyFail:"Could not copy. Check browser permissions.",
+empty:"No players added yet.",
+enter:"Please enter player names first.",
+few:"Add at least 2 players.",
+bad:"Choose between 2 and 20 teams.",
+many:"Each team must have at least one player.",
+confirm:"Delete all players?",
+copied:"Result copied!",
 captain:"Captain",
-team:"Team",
-noResult:"Make teams first.",
-imageSaved:"Team image downloaded."
-}
-};
+team:"Team"
+}};
 
-let lang="hi";
-let players=[];
-
-let latestTeams=[];
-
-try {
-const stored=JSON.parse(
-localStorage.getItem("team_banao_players")||"[]"
-);
-if(Array.isArray(stored)){
-players=stored.filter(x=>typeof x==="string").slice(0,200);
-}
-}catch(_){players=[];}
-
-function t(key){
-return translations[lang][key]||key;
-}
+const t=k=>words[lang][k]||words.en[k]||k;
 
 function save(){
 try{
-localStorage.setItem(
-"team_banao_players",
-JSON.stringify(players)
-);
-}catch(_){}
+localStorage.setItem(KEY,JSON.stringify(players));
+}catch(e){console.warn(e);}
 }
 
 function renderPlayers(){
-$("count").textContent=`${t("total")}: ${players.length}`;
+$("count").textContent=t("total")+": "+players.length;
 
 const list=$("playerList");
 list.replaceChildren();
 
 if(!players.length){
 const empty=document.createElement("div");
-empty.className="empty";
 empty.textContent=t("empty");
-list.appendChild(empty);
+list.append(empty);
 return;
 }
 
-players.forEach((name,index)=>{
-const chip=document.createElement("div");
-chip.className="chip";
+players.forEach((name,i)=>{
+const tag=document.createElement("span");
+tag.className="player";
 
-const label=document.createElement("span");
-label.textContent=name;
+const text=document.createElement("span");
+text.textContent=name;
 
-const del=document.createElement("button");
-del.type="button";
-del.textContent="×";
-
-del.addEventListener("click",()=>{
-players.splice(index,1);
+const remove=document.createElement("button");
+remove.className="remove";
+remove.textContent="×";
+remove.type="button";
+remove.onclick=()=>{
+players.splice(i,1);
 save();
 renderPlayers();
-});
+};
 
-chip.append(label,del);
-list.appendChild(chip);
+tag.append(text,remove);
+list.append(tag);
 });
 }
 
@@ -231,32 +252,46 @@ function addPlayers(){
 const raw=$("nameInput").value.trim();
 
 if(!raw){
-alert(t("needNames"));
+alert(t("enter"));
 return;
 }
 
-const incoming=raw.split(/[,\n;]+/)
-.map(s=>s.trim())
-.filter(Boolean);
-
+const existing=new Set(players.map(x=>x.toLowerCase()));
 let added=0;
 
-incoming.forEach(name=>{
-if(!players.some(
-p=>p.toLocaleLowerCase()===name.toLocaleLowerCase()
-)&&players.length<200){
+raw.split(/[,\n;]+/)
+.map(x=>x.trim())
+.filter(Boolean)
+.forEach(name=>{
+const key=name.toLowerCase();
+
+if(existing.has(key))return;
+
+existing.add(key);
 players.push(name);
 added++;
-}
 });
 
 save();
 renderPlayers();
 $("nameInput").value="";
 
-if(!added&&players.length>=200){
-alert("Maximum 200 players.");
+alert(added?"Players added!":"Duplicate names skipped.");
 }
+
+function getCount(){
+const value=$("teamCount").value;
+
+const n=value==="custom"
+?parseInt($("customCount").value,10)
+:Number(value);
+
+if(!Number.isInteger(n)||n<2||n>20){
+alert(t("bad"));
+return null;
+}
+
+return n;
 }
 
 function shuffle(array){
@@ -270,249 +305,210 @@ const j=Math.floor(Math.random()*(i+1));
 return a;
 }
 
-function getTeamCount(){
-const value=$("teamCount").value;
-
-const n=value==="custom"
-?Number($("customCount").value)
-:Number(value);
-
-return Number.isInteger(n)?n:0;
-}
-
 function makeTeams(){
 if(players.length<2){
-alert(t("needMore"));
+alert(t("few"));
 return;
 }
 
-const n=getTeamCount();
-
-if(n<2||n>20){
-alert(t("tooMany"));
-return;
-}
+const n=getCount();
+if(!n)return;
 
 if(n>players.length){
-alert("Teams cannot exceed players.");
+alert(t("many"));
 return;
 }
 
-const mixed=shuffle(players);
+const groups=Array.from({length:n},()=>[]);
 
-latestTeams=Array.from(
-{length:n},
-()=>[]
-);
-
-mixed.forEach((player,i)=>{
-latestTeams[i%n].push(player);
+shuffle(players).forEach((player,i)=>{
+groups[i%n].push(player);
 });
 
-latestTeams=latestTeams.map(team=>({
-members:team,
-captain:team[Math.floor(Math.random()*team.length)]
+latestTeams=groups.map((members,i)=>({
+name:t("team")+" "+(i+1),
+members,
+captain:members[Math.floor(Math.random()*members.length)]
 }));
 
 renderTeams();
 }
 
 function renderTeams(){
-$("resultCard").hidden=false;
-
 const output=$("teamsOutput");
 output.replaceChildren();
 
-latestTeams.forEach((team,index)=>{
-const section=document.createElement("section");
-section.className="team";
+latestTeams.forEach(team=>{
+const card=document.createElement("article");
+card.className="team";
 
-const heading=document.createElement("h3");
-heading.textContent=
-`${t("team")} ${index+1} (${team.members.length})`;
+const head=document.createElement("div");
+head.className="team-head";
 
-const ul=document.createElement("ul");
+const title=document.createElement("h3");
+title.textContent=team.name;
+
+const count=document.createElement("span");
+count.className="team-count";
+count.textContent=team.members.length+" players";
+
+head.append(title,count);
+
+const captain=document.createElement("p");
+captain.className="captain";
+captain.textContent="👑 "+t("captain")+": "+team.captain;
+
+const members=document.createElement("div");
+members.className="members";
 
 team.members.forEach(name=>{
-const li=document.createElement("li");
-li.textContent=name;
-
-if(name===team.captain){
-li.className="captain";
-li.textContent=`👑 ${name} (${t("captain")})`;
-}
-
-ul.appendChild(li);
+const item=document.createElement("span");
+item.className="member"+(name===team.captain?" cap":"");
+item.textContent=(name===team.captain?"👑 ":"")+name;
+members.append(item);
 });
 
-section.append(heading,ul);
-output.appendChild(section);
+card.append(head,captain,members);
+output.append(card);
 });
 
-$("resultCard").scrollIntoView({
-behavior:"smooth",
-block:"nearest"
-});
+$("resultCount").textContent=players.length+" players";
+$("resultCard").hidden=false;
+$("resultCard").scrollIntoView({behavior:"smooth"});
 }
 
 function resultText(){
-return latestTeams.map((team,i)=>
-`${t("team")} ${i+1} (${team.members.length})\n`+
-team.members.map(name=>
-name===team.captain
-?`👑 ${name} (${t("captain")})`
-:name
-).join(", ")
-).join("\n\n")+
-`\n\n${t("title")}: ${location.href}`;
+return latestTeams.map(team=>
+team.name+" ("+team.members.length+")\n"+
+t("captain")+": "+team.captain+"\n"+
+team.members.join(", ")
+).join("\n\n");
 }
 
 async function copyResult(){
-if(!latestTeams.length){
-alert(t("noResult"));
-return;
-}
+if(!latestTeams.length)return;
 
 try{
 await navigator.clipboard.writeText(resultText());
 alert(t("copied"));
-}catch(_){
-alert(t("copyFail"));
+}catch(e){
+alert("Copy failed. Browser permission check karo.");
 }
 }
 
 function shareWhatsApp(){
-if(!latestTeams.length){
-alert(t("noResult"));
-return;
-}
+if(!latestTeams.length)return;
+
+const message=resultText()+"\n\nTeam Banao: "+location.href;
 
 window.open(
-"https://wa.me/?text="+encodeURIComponent(resultText()),
-"_blank",
-"noopener"
+"https://wa.me/?text="+encodeURIComponent(message),
+"_blank"
 );
 }
 
 async function shareWebsite(){
 const data={
 title:"Team Banao",
-text:"Try this free team maker!",
+text:"Try this free random team maker!",
 url:location.href
 };
 
 if(navigator.share){
 try{
 await navigator.share(data);
-}catch(_){}
+}catch(e){}
 }else{
 try{
 await navigator.clipboard.writeText(location.href);
 alert(t("copied"));
-}catch(_){
-window.open(
-"https://wa.me/?text="+encodeURIComponent(data.text+" "+data.url),
-"_blank",
-"noopener"
-);
+}catch(e){
+shareWhatsApp();
 }
 }
 }
 
 function downloadImage(){
-if(!latestTeams.length){
-alert(t("noResult"));
-return;
-}
+if(!latestTeams.length)return;
+
+const canvas=document.createElement("canvas");
+const width=1000;
+const padding=60;
+const lineHeight=48;
 
 const lines=[];
 
-latestTeams.forEach((team,i)=>{
-lines.push(`${t("team")} ${i+1} (${team.members.length})`);
+latestTeams.forEach(team=>{
+lines.push({text:team.name+" ("+team.members.length+")",type:"heading"});
+lines.push({text:"Captain: "+team.captain,type:"captain"});
 
 team.members.forEach(name=>{
-lines.push(
-name===team.captain
-?`👑 ${name} (${t("captain")})`
-:name
-);
+lines.push({text:"• "+name,type:"member"});
 });
 
-lines.push("");
+lines.push({text:"",type:"gap"});
 });
 
-const width=900;
-const pad=54;
-const lineH=42;
-const headerH=110;
-const height=headerH+Math.max(1,lines.length)*lineH+pad;
-
-const canvas=document.createElement("canvas");
 canvas.width=width;
-canvas.height=height;
+canvas.height=Math.max(420,180+lines.length*lineHeight+padding);
 
 const ctx=canvas.getContext("2d");
 
-const gradient=ctx.createLinearGradient(0,0,width,height);
-gradient.addColorStop(0,"#101827");
-gradient.addColorStop(1,"#203653");
+const gradient=ctx.createLinearGradient(0,0,width,canvas.height);
+gradient.addColorStop(0,"#101d32");
+gradient.addColorStop(1,"#172b47");
 
 ctx.fillStyle=gradient;
-ctx.fillRect(0,0,width,height);
+ctx.fillRect(0,0,width,canvas.height);
 
 ctx.fillStyle="#4ade80";
-ctx.font="bold 46px system-ui";
-ctx.fillText("Team Banao",pad,68);
+ctx.font="bold 48px system-ui";
+ctx.fillText("Team Banao",padding,78);
 
-ctx.fillStyle="#dbeafe";
-ctx.font="24px system-ui";
-ctx.fillText("Random teams • Fair play",pad,101);
+ctx.fillStyle="#cbd5e1";
+ctx.font="22px system-ui";
+ctx.fillText("Random Teams • Fair Play",padding,119);
 
-let y=headerH+30;
+let y=190;
 
-lines.forEach(line=>{
-if(!line){
-y+=14;
+lines.forEach(item=>{
+if(item.type==="gap"){
+y+=18;
 return;
 }
 
-const isHeading=/^Team |^टीम /.test(line);
+ctx.font=item.type==="heading"
+?"bold 31px system-ui"
+:"23px system-ui";
 
-ctx.font=isHeading
-?"bold 30px system-ui"
-:"24px system-ui";
-
-ctx.fillStyle=isHeading
+ctx.fillStyle=item.type==="heading"
 ?"#4ade80"
+:item.type==="captain"
+?"#fcd34d"
 :"#f8fafc";
 
-ctx.fillText(line.slice(0,48),pad,y);
-y+=lineH;
+ctx.fillText(item.text,padding,y);
+y+=lineHeight;
 });
 
-const link=canvas.toDataURL("image/png");
-
-const a=document.createElement("a");
-a.href=link;
-a.download="team-banao-result.png";
-a.click();
+const link=document.createElement("a");
+link.download="team-banao-result.png";
+link.href=canvas.toDataURL("image/png");
+link.click();
 }
 
 function applyLanguage(){
 document.documentElement.lang=lang;
 
 document.querySelectorAll("[data-i18n]").forEach(el=>{
-const key=el.dataset.i18n;
-el.textContent=t(key);
+el.textContent=t(el.dataset.i18n);
 });
 
-$("langBtn").textContent=
-lang==="hi"?"English":"हिंदी";
+$("langBtn").textContent=lang==="hi"?"English":"हिंदी";
 
-$("nameInput").placeholder=
-lang==="hi"
-?$("nameInput").dataset.placeholderHi
-:$("nameInput").dataset.placeholderEn;
+$("nameInput").placeholder=lang==="hi"
+?"Naam comma ya new line se alag likho"
+:"Separate names with commas or new lines";
 
 renderPlayers();
 
@@ -521,9 +517,9 @@ renderTeams();
 }
 }
 
-// BUTTON EVENTS
+// EVENTS
 
-$("addBtn").addEventListener("click",addPlayers);
+$("addBtn").onclick=addPlayers;
 
 $("nameInput").addEventListener("keydown",e=>{
 if(e.key==="Enter"&&(e.ctrlKey||e.metaKey)){
@@ -532,43 +528,46 @@ addPlayers();
 }
 });
 
-$("clearBtn").addEventListener("click",()=>{
-if(confirm(t("cleared"))){
+$("clearBtn").onclick=()=>{
+if(!players.length)return;
+
+if(confirm(t("confirm"))){
 players=[];
 latestTeams=[];
 save();
 renderPlayers();
 $("resultCard").hidden=true;
 }
-});
+};
 
-$("teamCount").addEventListener("change",()=>{
-$("customWrap").hidden=
-$("teamCount").value!=="custom";
-});
+$("teamCount").onchange=()=>{
+$("customWrap").hidden=$("teamCount").value!=="custom";
+};
 
-$("makeBtn").addEventListener("click",makeTeams);
+$("makeBtn").onclick=makeTeams;
+$("againBtn").onclick=makeTeams;
+$("copyBtn").onclick=copyResult;
+$("whatsBtn").onclick=shareWhatsApp;
+$("imageBtn").onclick=downloadImage;
+$("shareBtn").onclick=shareWebsite;
 
-$("againBtn").addEventListener("click",makeTeams);
-
-$("copyBtn").addEventListener("click",copyResult);
-
-$("whatsBtn").addEventListener("click",shareWhatsApp);
-
-$("imageBtn").addEventListener("click",downloadImage);
-
-$("shareBtn").addEventListener("click",shareWebsite);
-
-$("langBtn").addEventListener("click",()=>{
+$("langBtn").onclick=()=>{
 lang=lang==="hi"?"en":"hi";
 applyLanguage();
-});
+};
 
-// INITIALIZE
+// LOAD SAVED PLAYERS
+
+try{
+const saved=JSON.parse(localStorage.getItem(KEY)||"[]");
+players=Array.isArray(saved)?saved.filter(x=>typeof x==="string"):[];
+}catch(e){
+players=[];
+}
 
 applyLanguage();
 
-})();
 </script>
 </body>
-</html>
+  </html>
+  
